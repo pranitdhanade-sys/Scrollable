@@ -5,17 +5,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#111111">
-<title>MEDIA — Reels</title>
+<title>Scrollable — Media Reels</title>
 
 <style>
 :root {
     --bg: #111111;
-    --surface: #1c1c1c;
-    --white: #ffffff;
     --yellow: #f8df46;
     --pink: #ff5ca8;
-    --border: 3px solid #000000;
-    --shadow: 5px 5px 0 #000000;
+    --border: 3px solid #000;
+    --shadow: 5px 5px 0 #000;
 }
 
 * {
@@ -29,15 +27,9 @@ html, body {
     height: 100%;
     overflow: hidden;
     background: var(--bg);
-    color: var(--white);
+    color: white;
     font-family: Arial, Helvetica, sans-serif;
 }
-
-body {
-    overscroll-behavior: none;
-}
-
-/* MAIN FEED */
 
 #feed {
     width: 100%;
@@ -55,21 +47,19 @@ body {
     display: none;
 }
 
-/* EACH REEL */
-
 .reel {
     width: 100%;
     height: 100vh;
     height: 100dvh;
-    min-height: 100%;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
+    min-height: 100dvh;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background: #111111;
+    background: #111;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
 }
 
 .reel img,
@@ -83,32 +73,32 @@ body {
 }
 
 .reel video {
-    background: #111111;
+    background: #111;
 }
-
-/* TOP LABEL */
 
 .top-label {
     position: fixed;
+    z-index: 20;
     top: max(16px, env(safe-area-inset-top));
     left: 20px;
-    z-index: 20;
-    font-size: 19px;
+    color: var(--yellow);
+    font-size: 21px;
     font-weight: 1000;
     letter-spacing: -1px;
-    color: var(--yellow);
+    text-shadow: 2px 2px #000;
     pointer-events: none;
-    text-shadow: 2px 2px 0 #000;
 }
 
-/* MEDIA COUNTER */
+.top-label span {
+    color: var(--pink);
+}
 
 .counter {
     position: fixed;
+    z-index: 20;
     top: max(16px, env(safe-area-inset-top));
     right: 20px;
-    z-index: 20;
-    padding: 9px 15px;
+    padding: 9px 14px;
     background: var(--yellow);
     color: #000;
     border: var(--border);
@@ -118,36 +108,34 @@ body {
     pointer-events: none;
 }
 
-/* MEDIA TYPE */
-
-.media-type {
+.media-label {
     position: absolute;
-    bottom: max(25px, env(safe-area-inset-bottom));
+    z-index: 5;
     left: 20px;
-    z-index: 10;
-    padding: 9px 14px;
+    bottom: max(22px, env(safe-area-inset-bottom));
+    max-width: calc(100% - 100px);
+    padding: 9px 12px;
     background: var(--pink);
     color: #000;
     border: var(--border);
     box-shadow: var(--shadow);
     font-size: 11px;
     font-weight: 900;
+    overflow-wrap: anywhere;
     pointer-events: none;
 }
 
-/* NAVIGATION INDICATOR */
-
-.navigation-hint {
+.navigation {
     position: fixed;
+    z-index: 30;
     right: 20px;
-    bottom: 30px;
-    z-index: 20;
+    bottom: max(25px, env(safe-area-inset-bottom));
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.navigation-hint button {
+.navigation button {
     width: 42px;
     height: 42px;
     background: var(--yellow);
@@ -157,153 +145,101 @@ body {
     font-size: 20px;
     font-weight: 900;
     cursor: pointer;
-    transition: .15s;
 }
 
-.navigation-hint button:hover {
+.navigation button:active {
     transform: translate(3px, 3px);
-    box-shadow: 2px 2px 0 #000;
+    box-shadow: 1px 1px #000;
 }
 
-/* LOADING */
-
-.loading {
+#status {
     position: fixed;
     inset: 0;
     z-index: 100;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg);
-    font-size: 20px;
-    font-weight: 900;
-    color: var(--yellow);
-    transition: opacity .3s;
-}
-
-.loading.hidden {
-    opacity: 0;
-    pointer-events: none;
-}
-
-/* EMPTY */
-
-.empty {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 25px;
+    background: #111;
+    color: var(--yellow);
     text-align: center;
-    padding: 30px;
 }
 
-.empty h1 {
-    color: var(--yellow);
-    font-size: clamp(30px, 7vw, 60px);
+#status h1 {
+    font-size: clamp(25px, 6vw, 45px);
     font-weight: 1000;
 }
 
-.empty p {
-    margin-top: 15px;
+#status p {
+    max-width: 450px;
     color: #aaa;
+    font-size: 13px;
     line-height: 1.7;
+    overflow-wrap: anywhere;
 }
 
-/* ERROR MEDIA */
+#retry {
+    padding: 12px 20px;
+    background: var(--yellow);
+    color: #000;
+    border: var(--border);
+    box-shadow: var(--shadow);
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none !important;
+}
 
 .media-error {
-    width: 85%;
-    max-width: 450px;
-    padding: 30px;
+    max-width: 85%;
+    padding: 25px;
     background: var(--pink);
     color: #000;
     border: var(--border);
     box-shadow: var(--shadow);
-    text-align: center;
     font-weight: 900;
+    text-align: center;
     overflow-wrap: anywhere;
 }
 
-/* RESPONSIVE */
-
-@media (min-width: 768px) {
-
-    .reel img,
-    .reel video {
-        max-width: 100%;
-        max-height: 100%;
-    }
-
-    .top-label {
-        left: 30px;
-        font-size: 24px;
-    }
-
-    .counter {
-        right: 30px;
-        top: 25px;
-    }
-}
-
 @media (max-width: 767px) {
-
     .top-label {
-        left: 12px;
         top: max(12px, env(safe-area-inset-top));
+        left: 12px;
         font-size: 16px;
     }
 
     .counter {
-        right: 12px;
         top: max(10px, env(safe-area-inset-top));
+        right: 12px;
         padding: 7px 10px;
         font-size: 10px;
-        box-shadow: 3px 3px 0 #000;
+        box-shadow: 3px 3px #000;
     }
 
-    .reel {
-        width: 100%;
-        height: 100dvh;
-    }
-
-    .reel img,
-    .reel video {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
-
-    .media-type {
+    .media-label {
         left: 12px;
         bottom: max(16px, env(safe-area-inset-bottom));
+        padding: 7px 9px;
         font-size: 9px;
-        padding: 7px 10px;
-        box-shadow: 3px 3px 0 #000;
+        box-shadow: 3px 3px #000;
     }
 
-    .navigation-hint {
+    .navigation {
         right: 12px;
-        bottom: max(16px, env(safe-area-inset-bottom));
+        bottom: max(18px, env(safe-area-inset-bottom));
         gap: 8px;
     }
 
-    .navigation-hint button {
+    .navigation button {
         width: 36px;
         height: 36px;
         font-size: 16px;
-        box-shadow: 3px 3px 0 #000;
-    }
-}
-
-@media (max-width: 380px) {
-    .top-label {
-        font-size: 14px;
-    }
-
-    .counter {
-        font-size: 9px;
+        box-shadow: 3px 3px #000;
     }
 }
 
@@ -317,92 +253,207 @@ body {
 
 <body>
 
-<div class="loading" id="loading">
-    LOADING MEDIA...
-</div>
-
-<div class="top-label">MEDIA<span style="color:#ff5ca8">.</span></div>
+<div class="top-label">SCROLLABLE<span>.</span></div>
 
 <div class="counter" id="counter">0 / 0</div>
 
+<div id="status">
+    <h1 id="statusTitle">LOADING MEDIA...</h1>
+    <p id="statusMessage">Discovering images and videos from GitHub.</p>
+    <button id="retry" class="hidden" onclick="loadMedia()">RETRY</button>
+</div>
+
 <main id="feed"></main>
 
-<div class="navigation-hint">
+<div class="navigation">
     <button onclick="navigate(-1)" aria-label="Previous media">↑</button>
     <button onclick="navigate(1)" aria-label="Next media">↓</button>
 </div>
 
 <script>
 
-/* ===================================
-   MEDIA CONFIGURATION
-=================================== */
+/* ==========================================
+   REPOSITORY CONFIGURATION
+========================================== */
 
-const images = [
-    "assets/images/image1.jpg",
-    "assets/images/image2.png",
-    "assets/images/image3.svg",
-    "assets/images/image4.gif",
-    "assets/images/image5.webp"
+const CONFIG = {
+    owner: "pranitdhanade-sys",
+    repository: "Scrollable",
+    branch: "main",
+
+    imageFolder: "assets/images/",
+    videoFolder: "assets/videos/"
+};
+
+/* ==========================================
+   SUPPORTED IMAGE FORMATS
+========================================== */
+
+const IMAGE_FORMATS = [
+    "jpg",
+    "jpeg",
+    "png",
+    "gif",
+    "svg",
+    "webp",
+    "avif",
+    "bmp",
+    "tif",
+    "tiff",
+    "ico",
+    "apng"
 ];
 
-const videos = [
-    "assets/videos/video1.mp4",
-    "assets/videos/video2.webm",
-    "assets/videos/video3.mov"
+/* ==========================================
+   SUPPORTED VIDEO FORMATS
+========================================== */
+
+const VIDEO_FORMATS = [
+    "mp4",
+    "webm",
+    "mov",
+    "m4v",
+    "ogv",
+    "ogg",
+    "avi",
+    "mpeg",
+    "mpg",
+    "3gp",
+    "mkv"
 ];
 
-/* ===================================
-   SUPPORTED FORMATS
-=================================== */
-
-const imageExtensions = [
-    "jpg", "jpeg", "png", "gif", "svg",
-    "webp", "avif", "bmp", "tif", "tiff",
-    "ico", "apng"
-];
-
-const videoExtensions = [
-    "mp4", "webm", "mov", "m4v",
-    "ogv", "ogg", "avi", "mpeg",
-    "mpg", "3gp", "mkv"
-];
-
-/* ===================================
-   BUILD MEDIA LIST
-=================================== */
-
-const media = [
-    ...images.map(src => ({
-        src,
-        type: "image"
-    })),
-
-    ...videos.map(src => ({
-        src,
-        type: "video"
-    }))
-];
+/* ==========================================
+   ELEMENTS
+========================================== */
 
 const feed = document.getElementById("feed");
 const counter = document.getElementById("counter");
-const loading = document.getElementById("loading");
+const statusBox = document.getElementById("status");
+const statusTitle = document.getElementById("statusTitle");
+const statusMessage = document.getElementById("statusMessage");
+const retryButton = document.getElementById("retry");
 
+/* ==========================================
+   STATE
+========================================== */
+
+let media = [];
 let reels = [];
 let currentIndex = 0;
+let observer = null;
+let wheelLocked = false;
 
-/* ===================================
-   GET FILE EXTENSION
-=================================== */
+/* ==========================================
+   IDENTIFY FILE TYPE
+========================================== */
 
-function getExtension(path) {
-    return path.split("?")[0].split("#")[0]
-        .split(".").pop().toLowerCase();
+function identifyMedia(filename) {
+
+    const cleanName = filename.split("?")[0];
+    const extension = cleanName.split(".").pop().toLowerCase();
+
+    if (IMAGE_FORMATS.includes(extension)) {
+        return "image";
+    }
+
+    if (VIDEO_FORMATS.includes(extension)) {
+        return "video";
+    }
+
+    return null;
 }
 
-/* ===================================
-   CREATE MEDIA ELEMENT
-=================================== */
+/* ==========================================
+   GENERATE RAW GITHUB URL
+========================================== */
+
+function getRawURL(path) {
+
+    const encodedPath = path
+        .split("/")
+        .map(part => encodeURIComponent(part))
+        .join("/");
+
+    return `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repository}/${CONFIG.branch}/${encodedPath}`;
+}
+
+/* ==========================================
+   FETCH ENTIRE REPOSITORY TREE
+========================================== */
+
+async function discoverMedia() {
+
+    const apiURL =
+        `https://api.github.com/repos/` +
+        `${CONFIG.owner}/${CONFIG.repository}/git/trees/` +
+        `${CONFIG.branch}?recursive=1`;
+
+    const response = await fetch(apiURL, {
+        headers: {
+            "Accept": "application/vnd.github+json"
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error(
+            `GitHub API error: ${response.status}. Check repository access and API rate limits.`
+        );
+    }
+
+    const data = await response.json();
+
+    if (!data.tree) {
+        throw new Error("Could not read the repository file tree.");
+    }
+
+    if (data.truncated) {
+        throw new Error(
+            "GitHub returned an incomplete file tree. Reduce the repository size or use a generated media manifest."
+        );
+    }
+
+    const discovered = [];
+
+    data.tree.forEach(file => {
+
+        if (file.type !== "blob") return;
+
+        const path = file.path;
+
+        const isImageFolder = path.startsWith(CONFIG.imageFolder);
+        const isVideoFolder = path.startsWith(CONFIG.videoFolder);
+
+        if (!isImageFolder && !isVideoFolder) return;
+
+        const type = identifyMedia(path);
+
+        if (!type) return;
+
+        if (isImageFolder && type !== "image") return;
+        if (isVideoFolder && type !== "video") return;
+
+        discovered.push({
+            name: path.split("/").pop(),
+            path: path,
+            type: type,
+            src: getRawURL(path)
+        });
+
+    });
+
+    discovered.sort((a, b) =>
+        a.path.localeCompare(b.path, undefined, {
+            numeric: true,
+            sensitivity: "base"
+        })
+    );
+
+    return discovered;
+}
+
+/* ==========================================
+   CREATE MEDIA REEL
+========================================== */
 
 function createReel(item, index) {
 
@@ -410,77 +461,72 @@ function createReel(item, index) {
     reel.className = "reel";
     reel.dataset.index = index;
 
-    const extension = getExtension(item.src);
+    let element;
 
-    const type = item.type === "video" ||
-        videoExtensions.includes(extension)
-        ? "video"
-        : "image";
+    if (item.type === "video") {
 
-    const mediaElement = document.createElement(
-        type === "video" ? "video" : "img"
-    );
+        element = document.createElement("video");
 
-    if (type === "video") {
-
-        mediaElement.src = item.src;
-        mediaElement.muted = true;
-        mediaElement.loop = true;
-        mediaElement.controls = true;
-        mediaElement.playsInline = true;
-        mediaElement.preload = "metadata";
+        element.src = item.src;
+        element.controls = true;
+        element.muted = true;
+        element.loop = true;
+        element.playsInline = true;
+        element.preload = "metadata";
 
     } else {
 
-        mediaElement.src = item.src;
-        mediaElement.alt = "Media " + (index + 1);
-        mediaElement.draggable = false;
-        mediaElement.loading = index < 2 ? "eager" : "lazy";
-        mediaElement.decoding = "async";
+        element = document.createElement("img");
+
+        element.src = item.src;
+        element.alt = item.name;
+        element.draggable = false;
+        element.decoding = "async";
+        element.loading = index < 2 ? "eager" : "lazy";
     }
 
-    mediaElement.addEventListener("error", () => {
+    element.addEventListener("error", () => {
 
-        reel.innerHTML = `
-            <div class="media-error">
-                <h2>MEDIA UNAVAILABLE</h2>
-                <p style="margin-top:10px">${item.src}</p>
-            </div>
-        `;
+        const error = document.createElement("div");
 
+        error.className = "media-error";
+        error.textContent = "UNABLE TO LOAD: " + item.name;
+
+        reel.replaceChildren(error);
     });
 
-    const typeLabel = document.createElement("div");
-    typeLabel.className = "media-type";
-    typeLabel.textContent = type === "video"
-        ? "▶ VIDEO"
-        : extension.toUpperCase() + " IMAGE";
+    const label = document.createElement("div");
 
-    reel.appendChild(mediaElement);
-    reel.appendChild(typeLabel);
+    label.className = "media-label";
+    label.textContent =
+        (item.type === "video" ? "▶ VIDEO · " : "IMAGE · ") +
+        item.name;
+
+    reel.appendChild(element);
+    reel.appendChild(label);
 
     return reel;
 }
 
-/* ===================================
+/* ==========================================
    RENDER FEED
-=================================== */
+========================================== */
 
 function renderFeed() {
 
     feed.innerHTML = "";
+    reels = [];
+    currentIndex = 0;
 
     if (media.length === 0) {
 
-        feed.innerHTML = `
-            <div class="empty">
-                <h1>NO MEDIA FOUND.</h1>
-                <p>Add media paths in the JavaScript configuration.</p>
-            </div>
-        `;
+        showStatus(
+            "NO MEDIA FOUND",
+            "Upload images to assets/images/ and videos to assets/videos/ in your repository."
+        );
 
-        loading.classList.add("hidden");
         counter.textContent = "0 / 0";
+
         return;
     }
 
@@ -489,28 +535,25 @@ function renderFeed() {
     media.forEach((item, index) => {
 
         const reel = createReel(item, index);
+
         reels.push(reel);
-
         fragment.appendChild(reel);
-
     });
 
     feed.appendChild(fragment);
 
-    setupObserver();
+    setupVideoObserver();
 
-    loading.classList.add("hidden");
+    statusBox.classList.add("hidden");
 
     updateCounter();
 }
 
-/* ===================================
-   VIDEO AUTO PLAY
-=================================== */
+/* ==========================================
+   VIDEO AUTO PLAY / PAUSE
+========================================== */
 
-let observer;
-
-function setupObserver() {
+function setupVideoObserver() {
 
     if (observer) {
         observer.disconnect();
@@ -524,8 +567,10 @@ function setupObserver() {
 
             if (!video) return;
 
-            if (entry.isIntersecting &&
-                entry.intersectionRatio >= 0.65) {
+            if (
+                entry.isIntersecting &&
+                entry.intersectionRatio >= 0.65
+            ) {
 
                 video.play().catch(() => {});
 
@@ -547,33 +592,31 @@ function setupObserver() {
     });
 }
 
-/* ===================================
-   COUNTER
-=================================== */
+/* ==========================================
+   UPDATE MEDIA COUNTER
+========================================== */
 
 function updateCounter() {
 
     if (!reels.length) return;
 
-    const position = feed.scrollTop;
-
-    let closest = 0;
-    let minDistance = Infinity;
+    let closestIndex = 0;
+    let smallestDistance = Infinity;
 
     reels.forEach((reel, index) => {
 
         const distance = Math.abs(
-            reel.offsetTop - position
+            reel.getBoundingClientRect().top
         );
 
-        if (distance < minDistance) {
-            minDistance = distance;
-            closest = index;
+        if (distance < smallestDistance) {
+            smallestDistance = distance;
+            closestIndex = index;
         }
 
     });
 
-    currentIndex = closest;
+    currentIndex = closestIndex;
 
     counter.textContent =
         `${currentIndex + 1} / ${reels.length}`;
@@ -583,26 +626,28 @@ feed.addEventListener("scroll", updateCounter, {
     passive: true
 });
 
-/* ===================================
+/* ==========================================
    NAVIGATION
-=================================== */
+========================================== */
 
 function navigate(direction) {
 
-    const next = Math.max(
+    if (!reels.length) return;
+
+    const nextIndex = Math.max(
         0,
         Math.min(currentIndex + direction, reels.length - 1)
     );
 
-    reels[next]?.scrollIntoView({
+    reels[nextIndex].scrollIntoView({
         behavior: "smooth",
         block: "start"
     });
 }
 
-/* ===================================
+/* ==========================================
    KEYBOARD CONTROLS
-=================================== */
+========================================== */
 
 document.addEventListener("keydown", event => {
 
@@ -611,18 +656,26 @@ document.addEventListener("keydown", event => {
         event.target.tagName === "TEXTAREA"
     ) return;
 
-    if (event.key === "ArrowDown" || event.key === "PageDown") {
+    if (
+        event.key === "ArrowDown" ||
+        event.key === "PageDown"
+    ) {
         event.preventDefault();
         navigate(1);
     }
 
-    if (event.key === "ArrowUp" || event.key === "PageUp") {
+    if (
+        event.key === "ArrowUp" ||
+        event.key === "PageUp"
+    ) {
         event.preventDefault();
         navigate(-1);
     }
 
     if (event.key === "Home") {
-        reels[0]?.scrollIntoView({ behavior: "smooth" });
+        reels[0]?.scrollIntoView({
+            behavior: "smooth"
+        });
     }
 
     if (event.key === "End") {
@@ -633,16 +686,13 @@ document.addEventListener("keydown", event => {
 
 });
 
-/* ===================================
-   MOUSE WHEEL SUPPORT
-=================================== */
-
-let wheelLocked = false;
+/* ==========================================
+   MOUSE WHEEL NAVIGATION
+========================================== */
 
 feed.addEventListener("wheel", event => {
 
     if (wheelLocked) return;
-
     if (Math.abs(event.deltaY) < 10) return;
 
     wheelLocked = true;
@@ -655,34 +705,61 @@ feed.addEventListener("wheel", event => {
 
 }, { passive: true });
 
-/* ===================================
-   TOUCH SWIPE SUPPORT
-=================================== */
+/* ==========================================
+   LOADING / ERROR STATUS
+========================================== */
 
-let touchStartY = 0;
-let touchEndY = 0;
+function showStatus(title, message, retry = false) {
 
-feed.addEventListener("touchstart", event => {
-    touchStartY = event.changedTouches[0].screenY;
-}, { passive: true });
+    statusTitle.textContent = title;
+    statusMessage.textContent = message;
 
-feed.addEventListener("touchend", event => {
+    retryButton.classList.toggle(
+        "hidden",
+        !retry
+    );
 
-    touchEndY = event.changedTouches[0].screenY;
+    statusBox.classList.remove("hidden");
+}
 
-    const difference = touchStartY - touchEndY;
+/* ==========================================
+   LOAD ALL MEDIA
+========================================== */
 
-    if (Math.abs(difference) > 50) {
-        navigate(difference > 0 ? 1 : -1);
+async function loadMedia() {
+
+    showStatus(
+        "SCANNING REPOSITORY...",
+        "Finding every image and video in your asset folders."
+    );
+
+    retryButton.classList.add("hidden");
+
+    try {
+
+        media = await discoverMedia();
+
+        console.log("Discovered media:", media);
+
+        renderFeed();
+
+    } catch (error) {
+
+        console.error(error);
+
+        showStatus(
+            "FAILED TO LOAD MEDIA",
+            error.message,
+            true
+        );
     }
+}
 
-}, { passive: true });
+/* ==========================================
+   START
+========================================== */
 
-/* ===================================
-   INITIALIZE
-=================================== */
-
-renderFeed();
+loadMedia();
 
 </script>
 
