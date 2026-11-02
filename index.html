@@ -1,0 +1,690 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<title>MEDIA — Reels</title>
+
+<style>
+:root {
+    --bg: #111111;
+    --surface: #1c1c1c;
+    --white: #ffffff;
+    --yellow: #f8df46;
+    --pink: #ff5ca8;
+    --border: 3px solid #000000;
+    --shadow: 5px 5px 0 #000000;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--white);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    overscroll-behavior: none;
+}
+
+/* MAIN FEED */
+
+#feed {
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    overscroll-behavior-y: contain;
+    scrollbar-width: none;
+}
+
+#feed::-webkit-scrollbar {
+    display: none;
+}
+
+/* EACH REEL */
+
+.reel {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #111111;
+}
+
+.reel img,
+.reel video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.reel video {
+    background: #111111;
+}
+
+/* TOP LABEL */
+
+.top-label {
+    position: fixed;
+    top: max(16px, env(safe-area-inset-top));
+    left: 20px;
+    z-index: 20;
+    font-size: 19px;
+    font-weight: 1000;
+    letter-spacing: -1px;
+    color: var(--yellow);
+    pointer-events: none;
+    text-shadow: 2px 2px 0 #000;
+}
+
+/* MEDIA COUNTER */
+
+.counter {
+    position: fixed;
+    top: max(16px, env(safe-area-inset-top));
+    right: 20px;
+    z-index: 20;
+    padding: 9px 15px;
+    background: var(--yellow);
+    color: #000;
+    border: var(--border);
+    box-shadow: var(--shadow);
+    font-size: 12px;
+    font-weight: 900;
+    pointer-events: none;
+}
+
+/* MEDIA TYPE */
+
+.media-type {
+    position: absolute;
+    bottom: max(25px, env(safe-area-inset-bottom));
+    left: 20px;
+    z-index: 10;
+    padding: 9px 14px;
+    background: var(--pink);
+    color: #000;
+    border: var(--border);
+    box-shadow: var(--shadow);
+    font-size: 11px;
+    font-weight: 900;
+    pointer-events: none;
+}
+
+/* NAVIGATION INDICATOR */
+
+.navigation-hint {
+    position: fixed;
+    right: 20px;
+    bottom: 30px;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.navigation-hint button {
+    width: 42px;
+    height: 42px;
+    background: var(--yellow);
+    color: #000;
+    border: var(--border);
+    box-shadow: var(--shadow);
+    font-size: 20px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: .15s;
+}
+
+.navigation-hint button:hover {
+    transform: translate(3px, 3px);
+    box-shadow: 2px 2px 0 #000;
+}
+
+/* LOADING */
+
+.loading {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--yellow);
+    transition: opacity .3s;
+}
+
+.loading.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* EMPTY */
+
+.empty {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 30px;
+}
+
+.empty h1 {
+    color: var(--yellow);
+    font-size: clamp(30px, 7vw, 60px);
+    font-weight: 1000;
+}
+
+.empty p {
+    margin-top: 15px;
+    color: #aaa;
+    line-height: 1.7;
+}
+
+/* ERROR MEDIA */
+
+.media-error {
+    width: 85%;
+    max-width: 450px;
+    padding: 30px;
+    background: var(--pink);
+    color: #000;
+    border: var(--border);
+    box-shadow: var(--shadow);
+    text-align: center;
+    font-weight: 900;
+    overflow-wrap: anywhere;
+}
+
+/* RESPONSIVE */
+
+@media (min-width: 768px) {
+
+    .reel img,
+    .reel video {
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    .top-label {
+        left: 30px;
+        font-size: 24px;
+    }
+
+    .counter {
+        right: 30px;
+        top: 25px;
+    }
+}
+
+@media (max-width: 767px) {
+
+    .top-label {
+        left: 12px;
+        top: max(12px, env(safe-area-inset-top));
+        font-size: 16px;
+    }
+
+    .counter {
+        right: 12px;
+        top: max(10px, env(safe-area-inset-top));
+        padding: 7px 10px;
+        font-size: 10px;
+        box-shadow: 3px 3px 0 #000;
+    }
+
+    .reel {
+        width: 100%;
+        height: 100dvh;
+    }
+
+    .reel img,
+    .reel video {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .media-type {
+        left: 12px;
+        bottom: max(16px, env(safe-area-inset-bottom));
+        font-size: 9px;
+        padding: 7px 10px;
+        box-shadow: 3px 3px 0 #000;
+    }
+
+    .navigation-hint {
+        right: 12px;
+        bottom: max(16px, env(safe-area-inset-bottom));
+        gap: 8px;
+    }
+
+    .navigation-hint button {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+        box-shadow: 3px 3px 0 #000;
+    }
+}
+
+@media (max-width: 380px) {
+    .top-label {
+        font-size: 14px;
+    }
+
+    .counter {
+        font-size: 9px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #feed {
+        scroll-behavior: auto;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="loading" id="loading">
+    LOADING MEDIA...
+</div>
+
+<div class="top-label">MEDIA<span style="color:#ff5ca8">.</span></div>
+
+<div class="counter" id="counter">0 / 0</div>
+
+<main id="feed"></main>
+
+<div class="navigation-hint">
+    <button onclick="navigate(-1)" aria-label="Previous media">↑</button>
+    <button onclick="navigate(1)" aria-label="Next media">↓</button>
+</div>
+
+<script>
+
+/* ===================================
+   MEDIA CONFIGURATION
+=================================== */
+
+const images = [
+    "assets/images/image1.jpg",
+    "assets/images/image2.png",
+    "assets/images/image3.svg",
+    "assets/images/image4.gif",
+    "assets/images/image5.webp"
+];
+
+const videos = [
+    "assets/videos/video1.mp4",
+    "assets/videos/video2.webm",
+    "assets/videos/video3.mov"
+];
+
+/* ===================================
+   SUPPORTED FORMATS
+=================================== */
+
+const imageExtensions = [
+    "jpg", "jpeg", "png", "gif", "svg",
+    "webp", "avif", "bmp", "tif", "tiff",
+    "ico", "apng"
+];
+
+const videoExtensions = [
+    "mp4", "webm", "mov", "m4v",
+    "ogv", "ogg", "avi", "mpeg",
+    "mpg", "3gp", "mkv"
+];
+
+/* ===================================
+   BUILD MEDIA LIST
+=================================== */
+
+const media = [
+    ...images.map(src => ({
+        src,
+        type: "image"
+    })),
+
+    ...videos.map(src => ({
+        src,
+        type: "video"
+    }))
+];
+
+const feed = document.getElementById("feed");
+const counter = document.getElementById("counter");
+const loading = document.getElementById("loading");
+
+let reels = [];
+let currentIndex = 0;
+
+/* ===================================
+   GET FILE EXTENSION
+=================================== */
+
+function getExtension(path) {
+    return path.split("?")[0].split("#")[0]
+        .split(".").pop().toLowerCase();
+}
+
+/* ===================================
+   CREATE MEDIA ELEMENT
+=================================== */
+
+function createReel(item, index) {
+
+    const reel = document.createElement("section");
+    reel.className = "reel";
+    reel.dataset.index = index;
+
+    const extension = getExtension(item.src);
+
+    const type = item.type === "video" ||
+        videoExtensions.includes(extension)
+        ? "video"
+        : "image";
+
+    const mediaElement = document.createElement(
+        type === "video" ? "video" : "img"
+    );
+
+    if (type === "video") {
+
+        mediaElement.src = item.src;
+        mediaElement.muted = true;
+        mediaElement.loop = true;
+        mediaElement.controls = true;
+        mediaElement.playsInline = true;
+        mediaElement.preload = "metadata";
+
+    } else {
+
+        mediaElement.src = item.src;
+        mediaElement.alt = "Media " + (index + 1);
+        mediaElement.draggable = false;
+        mediaElement.loading = index < 2 ? "eager" : "lazy";
+        mediaElement.decoding = "async";
+    }
+
+    mediaElement.addEventListener("error", () => {
+
+        reel.innerHTML = `
+            <div class="media-error">
+                <h2>MEDIA UNAVAILABLE</h2>
+                <p style="margin-top:10px">${item.src}</p>
+            </div>
+        `;
+
+    });
+
+    const typeLabel = document.createElement("div");
+    typeLabel.className = "media-type";
+    typeLabel.textContent = type === "video"
+        ? "▶ VIDEO"
+        : extension.toUpperCase() + " IMAGE";
+
+    reel.appendChild(mediaElement);
+    reel.appendChild(typeLabel);
+
+    return reel;
+}
+
+/* ===================================
+   RENDER FEED
+=================================== */
+
+function renderFeed() {
+
+    feed.innerHTML = "";
+
+    if (media.length === 0) {
+
+        feed.innerHTML = `
+            <div class="empty">
+                <h1>NO MEDIA FOUND.</h1>
+                <p>Add media paths in the JavaScript configuration.</p>
+            </div>
+        `;
+
+        loading.classList.add("hidden");
+        counter.textContent = "0 / 0";
+        return;
+    }
+
+    const fragment = document.createDocumentFragment();
+
+    media.forEach((item, index) => {
+
+        const reel = createReel(item, index);
+        reels.push(reel);
+
+        fragment.appendChild(reel);
+
+    });
+
+    feed.appendChild(fragment);
+
+    setupObserver();
+
+    loading.classList.add("hidden");
+
+    updateCounter();
+}
+
+/* ===================================
+   VIDEO AUTO PLAY
+=================================== */
+
+let observer;
+
+function setupObserver() {
+
+    if (observer) {
+        observer.disconnect();
+    }
+
+    observer = new IntersectionObserver(entries => {
+
+        entries.forEach(entry => {
+
+            const video = entry.target.querySelector("video");
+
+            if (!video) return;
+
+            if (entry.isIntersecting &&
+                entry.intersectionRatio >= 0.65) {
+
+                video.play().catch(() => {});
+
+            } else {
+
+                video.pause();
+
+            }
+
+        });
+
+    }, {
+        root: feed,
+        threshold: [0, 0.25, 0.65, 1]
+    });
+
+    reels.forEach(reel => {
+        observer.observe(reel);
+    });
+}
+
+/* ===================================
+   COUNTER
+=================================== */
+
+function updateCounter() {
+
+    if (!reels.length) return;
+
+    const position = feed.scrollTop;
+
+    let closest = 0;
+    let minDistance = Infinity;
+
+    reels.forEach((reel, index) => {
+
+        const distance = Math.abs(
+            reel.offsetTop - position
+        );
+
+        if (distance < minDistance) {
+            minDistance = distance;
+            closest = index;
+        }
+
+    });
+
+    currentIndex = closest;
+
+    counter.textContent =
+        `${currentIndex + 1} / ${reels.length}`;
+}
+
+feed.addEventListener("scroll", updateCounter, {
+    passive: true
+});
+
+/* ===================================
+   NAVIGATION
+=================================== */
+
+function navigate(direction) {
+
+    const next = Math.max(
+        0,
+        Math.min(currentIndex + direction, reels.length - 1)
+    );
+
+    reels[next]?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+/* ===================================
+   KEYBOARD CONTROLS
+=================================== */
+
+document.addEventListener("keydown", event => {
+
+    if (
+        event.target.tagName === "INPUT" ||
+        event.target.tagName === "TEXTAREA"
+    ) return;
+
+    if (event.key === "ArrowDown" || event.key === "PageDown") {
+        event.preventDefault();
+        navigate(1);
+    }
+
+    if (event.key === "ArrowUp" || event.key === "PageUp") {
+        event.preventDefault();
+        navigate(-1);
+    }
+
+    if (event.key === "Home") {
+        reels[0]?.scrollIntoView({ behavior: "smooth" });
+    }
+
+    if (event.key === "End") {
+        reels[reels.length - 1]?.scrollIntoView({
+            behavior: "smooth"
+        });
+    }
+
+});
+
+/* ===================================
+   MOUSE WHEEL SUPPORT
+=================================== */
+
+let wheelLocked = false;
+
+feed.addEventListener("wheel", event => {
+
+    if (wheelLocked) return;
+
+    if (Math.abs(event.deltaY) < 10) return;
+
+    wheelLocked = true;
+
+    navigate(event.deltaY > 0 ? 1 : -1);
+
+    setTimeout(() => {
+        wheelLocked = false;
+    }, 650);
+
+}, { passive: true });
+
+/* ===================================
+   TOUCH SWIPE SUPPORT
+=================================== */
+
+let touchStartY = 0;
+let touchEndY = 0;
+
+feed.addEventListener("touchstart", event => {
+    touchStartY = event.changedTouches[0].screenY;
+}, { passive: true });
+
+feed.addEventListener("touchend", event => {
+
+    touchEndY = event.changedTouches[0].screenY;
+
+    const difference = touchStartY - touchEndY;
+
+    if (Math.abs(difference) > 50) {
+        navigate(difference > 0 ? 1 : -1);
+    }
+
+}, { passive: true });
+
+/* ===================================
+   INITIALIZE
+=================================== */
+
+renderFeed();
+
+</script>
+
+</body>
+</html>
